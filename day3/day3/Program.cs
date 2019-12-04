@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace day3
 {
@@ -10,68 +12,93 @@ namespace day3
             string input2 = "L1003,D878,R937,D979,R921,U572,R4,D959,L884,U394,R221,U206,R806,U912,R345,D290,R65,D996,L411,D157,R590,D557,L32,D360,L691,D861,L156,D603,R733,U444,L433,U144,L238,U213,R827,U949,R384,D409,L727,U923,L98,U781,L201,D200,R749,U288,L486,U158,L494,D522,R636,D330,L507,U691,R918,D706,R163,U609,R559,U674,R784,D87,R670,U401,L85,U981,R848,D579,L882,U777,R671,D385,R913,D899,R92,D780,L795,U821,R956,U446,L109,D955,L570,D874,R499,U845,R769,U88,L529,U657,R553,D357,L83,D324,L273,U689,L715,U933,R161,U561,L603,U349,L445,U781,R299,U26,L212,U429,R763,U116,R961,D258,L518,D668,L767,U587,L654,D24,R318,U35,L9,D199,L161,U419,R6,D707,R944,U499,R207,D349,L727,D637,R735,D137,R18,D214,L531,D327,L916,U440,R859,U483,R952,D631,L96,D320,L192,D985,R330,D196,L345,D575,L535,D868,R376,D126,R903,D619,L126,D624,L990,D67,L927,U685,L200,D759,L157,D816,L585,U910,R587,D598,L398,U706,R847,U682,L919,D291,L932,D54,L314,U430,L60,U206,L997,D487,L874,U957,L753,U999,R156,U102,L826,U923,L204,U293,L244,U787,L273,D687,R134,D167,L287,D459,R875,D32,R635,D400,L179,D19,L576,U60,L182,D409,R114,U329,R207,U525,L295,U305,L861,U280,R531,D49,L890,U521,L283,U37,R344,D867,L474,U893,R140,U289,L67,U490,R121,D34,L696,U902,R288,U249,R107,D750,R389,U125,L406,U950,R932,U795,R205,U583,L665,U214,R806,D409,R832,D39,R207,D977,L873,U645,L762,U847,L725,U397,R414,D558,L669,D736,R897,U464,R207,U359,R257,U304,L932,U240,L582,U409,L493,D481,R48,D537,R893,U48,R707,U630,L70,D289,L769,U98,L679,U504,L337,U117,L343,D574,R595,U168,R498";
             string[] arr1 = input1.Split(',');
             string[] arr2 = input2.Split(',');
-            int x = CalculateX(arr1);
-            int y = CalculateY(arr1);
-            int xx = CalculateX(arr2);
-            int yy = CalculateY(arr2);
-            Console.WriteLine(x + "      " + y);
-            Console.WriteLine(xx + "      " + yy);
+            List<string> coords1 = Calculate(arr1);
+            List<string> coords2 = Calculate(arr2);
+
+
+            var cc = coords1.ToArray();
+            var cc2 = coords2.ToArray();
+
+            var coords3 = cc2.Intersect(cc);
+
+
+
+
 
         }
-        public static int CalculateX(string[] arr)
+
+
+
+        public static List<string> Calculate(string[] arr)
         {
+            List<string> coords = new List<string>();
             int x = 0;
+            int y = 0;
+            var count = 0;
             foreach (var item in arr)
             {
+                string num = "";
+
+                count++;
+                for (int i = 1; i < item.Length; i++)
+                {
+                    num += item[i];
+                }
+                int number = Convert.ToInt32(num);
+
                 if (item[0] == 'R')
                 {
-                    int num = 0;
-                    for (int i = 1; i < item.Length; i++)
+                    for (int i = 0; i < number; i++)
                     {
-                        num += int.Parse(item[i].ToString());
+                        var c = (x + i) + "," + y;
+                        if (!coords.Contains(c))
+                        {
+                            coords.Add(c);
+                        }
                     }
-                    x += num;
+                    x += number;
                 }
-
                 else if (item[0] == 'L')
                 {
-                    int num = 0;
-                    for (int i = 1; i < item.Length; i++)
+                    for (int i = 0; i < number; i++)
                     {
-                        num += int.Parse(item[i].ToString());
+                        var c = (x - i) + "," + y;
+                        if (!coords.Contains(c))
+                        {
+                            coords.Add(c);
+                        }
                     }
-                    x -= num;
+                    x -= number;
+
                 }
-
-            }
-            return x;
-
-        }
-        public static int CalculateY(string[] arr)
-        {
-            int y = 0;
-            foreach (var item in arr)
-            {
-                if (item[0] == 'U')
+                else if (item[0] == 'U')
                 {
-                    int num = 0;
-                    for (int i = 1; i < item.Length; i++)
+                    for (int i = 0; i < number; i++)
                     {
-                        num += int.Parse(item[i].ToString());
+                        var c = x + "," + (y + i);
+                        if (!coords.Contains(c))
+                        {
+                            coords.Add(c);
+                        }
                     }
-                    y += num;
+                    y += number;
+
                 }
                 else if (item[0] == 'D')
                 {
-                    int num = 0;
-                    for (int i = 1; i < item.Length; i++)
+                    for (int i = 0; i < number; i++)
                     {
-                        num += int.Parse(item[i].ToString());
+                        var c = x + "," + (y - i);
+                        if (!coords.Contains(c))
+                        {
+                            coords.Add(c);
+                        }
                     }
-                    y -= num;
+                    y -= number;
+
                 }
             }
-            return y;
+            return coords;
 
         }
     }
